@@ -1,0 +1,110 @@
+{
+NULL = 00
+A = 1
+B = 2
+C = 3
+D = 4
+E = 5
+X = 6
+IPH = 7
+IPL = 8
+DPH = 9
+DPL = 10
+JDH = 11
+JDL = 12
+SPH = 13
+SPL = 14
+DR = 15
+MARH = 16
+MARL = 17
+CR = 18
+ALU_A = 19
+ALU_B = 20
+CONDBIT = 21
+UNCONDJUMP = 22
+CONDJUMP = 23
+& = 16
+| = 17
+^ = 18
+LR = 19
+RR = 20
+Fl = 21
+a7 = 7
+> = 5
+< = 4
+eq = 3
+a0 = 2
+is1 = 1
+}
+
+start: 0x00 i A
+0x01 i B
+0x01 i D
+
+0x00 i C
+0x00 i DR
+0x06 i CR
+0x00 i CONDBIT
+
+Fibonacci: C ALU_A
+Fl ALU_A
+is1 i ALU_B
+Fl ALU_A
+0x01 i ALU_B
+& CONDBIT
+start i CONDJUMP
+
+waitret i X
+wait i UNCONDJUMP
+
+waitret: addret i X
+0x00 i C
+doadd i UNCONDJUMP
+
+addret: dispret i X
+display i UNCONDJUMP
+
+dispret: D A
+DR D
+D B
+Fibonacci i UNCONDJUMP
+
+
+doadd: X E
+next1 i X
+ADD i UNCONDJUMP
+next1: E X
+X UNCONDJUMP
+
+HALT: NULL NULL
+HALT i UNCONDJUMP
+
+wait: NULL NULL
+NULL NULL
+NULL NULL
+NULL NULL
+NULL NULL
+NULL NULL
+NULL NULL
+X UNCONDJUMP
+
+ADD: A ALU_A
+B ALU_B
+^ A
+& ALU_A
+LR ALU_A
+0xFE i ALU_B
+& B
+0x01 i ALU_B
+& ALU_A
+C ALU_B
+| C
+B ALU_A
+Fl ALU_A
+is1 i ALU_B
+Fl CONDBIT
+ADD i CONDJUMP
+X UNCONDJUMP
+
+display: A DR
+X UNCONDJUMP
